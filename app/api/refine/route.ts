@@ -4,6 +4,18 @@ import { logger } from '@/app/lib/utils/logger';
 import { RefineRequest } from '@/app/lib/types';
 
 export async function POST(request: NextRequest) {
+  // 🚧 Maintenance Mode Check
+  if (process.env.MAINTENANCE_MODE === 'true') {
+    return NextResponse.json(
+      {
+        success: false,
+        error: '🚧 서비스 준비 중\n\n더 나은 경험을 위해 열심히 개발하고 있습니다!\n2026년 3월 정식 오픈 예정이에요.\n\n궁금한 점이 있으시다면:\n📧 GitHub Issues로 문의해주세요 😊',
+        maintenance: true,
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     const body: RefineRequest = await request.json();
     const { currentCode, refinement, conversationHistory } = body;
